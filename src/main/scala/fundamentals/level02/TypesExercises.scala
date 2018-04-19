@@ -38,7 +38,7 @@ object TypesExercises {
     **/
   def showPerson1(person: Person): String =
     person match {
-      case Person(name, age) => s"${???} is ${???} years old"
+      case Person(name, age) => s"${name} is ${age} years old"
     }
 
   /**
@@ -47,7 +47,7 @@ object TypesExercises {
     * Hint: Navigate the Person class' fields using the "." operator
     */
   def showPerson2(person: Person): String =
-    s"${???} is ${???} years old"
+    s"${person.name} is ${person.age} years old"
 
   /**
     * scala> val person = Person("Bob", 50)
@@ -59,7 +59,7 @@ object TypesExercises {
     *
     * Hint: Use the .copy method
     */
-  def changeName(newName: String, person: Person): Person = ???
+  def changeName(newName: String, person: Person): Person = person.copy(name = newName)
 
   /**
     * Let's look at another data type.
@@ -85,7 +85,7 @@ object TypesExercises {
     * scala> purchase(80, wallet)
     * = Wallet(20)
     **/
-  def purchase(cost: Double, wallet: Wallet): Wallet = ???
+  def purchase(cost: Double, wallet: Wallet): Wallet = wallet.copy(amount = wallet.amount - cost)
 
   /**
     * scala> showTrafficLightStr("red")
@@ -102,7 +102,10 @@ object TypesExercises {
     * Go to `TypesExercisesTest.scala` and implement the test for this scenario: "should return a default on other inputs"
     *
     **/
-  def showTrafficLightStr(trafficLight: String): String = ???
+  def showTrafficLightStr(trafficLight: String): String = trafficLight.split(' ') match {
+    case Array("flashing", f) =>  s"The traffic light is flashing with a frequency of $f"
+    case _ => s"The traffic light is $trafficLight"
+  }
 
   /**
     * We have a new traffic light called Flashing.
@@ -135,6 +138,8 @@ object TypesExercises {
 
     case object Green extends TrafficLight
 
+    case class Flashing(frequency: Int) extends TrafficLight
+
   }
 
   /**
@@ -153,8 +158,12 @@ object TypesExercises {
     **/
 
   import TrafficLight._
-
-  def showTrafficLight(trafficLight: TrafficLight): String = ???
+  
+  def showTrafficLight(trafficLight: TrafficLight): String = s"The traffic light is ${trafficLight match {
+    case Red => "red"
+    case Yellow => "yellow"
+    case Green => "green"
+  }}"
 
   /**
     * Now introduce a new type of `TrafficLight` called `Flashing`.
