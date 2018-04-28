@@ -76,7 +76,7 @@ object TypesExercises {
     *
     * You can solve this like how you solved `showPerson1` or `showPerson2`.
     */
-  def showWallet(wallet: Wallet): String = ???
+  def showWallet(wallet: Wallet): String = s"The wallet amount is ${wallet.amount}"
 
   /**
     * Here is another example of working with immutable values.
