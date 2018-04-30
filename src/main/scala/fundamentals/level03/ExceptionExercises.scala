@@ -42,7 +42,10 @@ object ExceptionExercises {
     *
     * Hint: use the isEmpty method on String
     */
-  def getName(providedName: String) : String = ???
+  def getName(providedName: String) : String = providedName.trim match {
+    case "" => throw new EmptyNameException("provided name is empty")
+    case _ => providedName
+  }
 
   /**
     * Implement the function getAge, so that it either accepts the supplied age
@@ -63,11 +66,13 @@ object ExceptionExercises {
     */
   def getAge(providedAge: String) : Int =
       try {
-        ???
+        val age = providedAge.toInt
+        
+        if (1 to 120 contains age) age
+        else throw new InvalidAgeRangeException(s"provided age should be between 1-120: $providedAge")
       } catch {
-        case _: NumberFormatException => ???
+        case _: NumberFormatException => throw new InvalidAgeValueException(s"provided age is invalid: $providedAge")
       }
-
 
   /**
     * Implement the function createPerson, so that it either accepts a name and age
@@ -91,7 +96,7 @@ object ExceptionExercises {
     *
     * Hint: Use `getName` and `getAge` from above.
     */
-  def createPerson(name: String, age: String): Person = ???
+  def createPerson(name: String, age: String): Person = Person(getName(name), getAge(age))
 
   /**
     * Implement the function createValidPeople that only uses the collect function on List
@@ -131,4 +136,15 @@ object ExceptionExercises {
       case (name, age) => ???
     }
   }
+ // def collectErrors: List[Exception] = personStringPairs.foldRight(List[Exception]()) {
+ //   case ((n, a), errs) =>
+ //     try {
+ //       createPerson(n, a)
+ //       errs
+ //     } catch {
+ //       case e: EmptyNameException => e :: errs
+ //       case e: InvalidAgeValueException => e :: errs
+ //       case e: InvalidAgeRangeException => e :: errs
+ //     }
+ // }
 }
