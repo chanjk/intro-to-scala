@@ -41,7 +41,7 @@ object ListExercises {
     *
     * Hint: Refer the construction of list
     */
-  def prependToList[A](x: A, xs: List[A]): List[A] = ???
+  def prependToList[A](x: A, xs: List[A]): List[A] = x :: xs
 
   /**
     * scala> appendToList(1, List(2, 3, 4))
@@ -49,7 +49,7 @@ object ListExercises {
     *
     * Hint: Use the :+ operator
     */
-  def appendToList[A](x: A, xs: List[A]): List[A] = ???
+  def appendToList[A](x: A, xs: List[A]): List[A] = xs :+ x
 
   /**
     * `List` has an `.isEmpty` method that you can call to know whether an instance is empty or not.
