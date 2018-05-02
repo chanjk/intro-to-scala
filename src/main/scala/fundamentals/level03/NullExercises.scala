@@ -95,7 +95,7 @@ object NullExercises {
     **/
   def mkPersonOrNullThenChangeName(oldName: String, age: Int, newName: String): Person = mkPersonOrNull(oldName, age) match {
     case null => null
-    case Person(n, a) => Person(newName, a)
+    case Person(_, a) => mkPersonOrNull(newName, a)
   }
 
   def changeName(newName: String, person: Person): Person = person.copy(name = newName)

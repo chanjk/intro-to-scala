@@ -62,9 +62,9 @@ object OptionExercises1 {
     * Hint: Use pattern matching
     **/
   def mkTrafficLight(str: String): Option[TrafficLight] = str match {
-    case "red" => Some(TrafficLight.Red)
-    case "yellow" => Some(TrafficLight.Yellow)
-    case "green" => Some(TrafficLight.Green)
+    case "red" => Some(Red)
+    case "yellow" => Some(Yellow)
+    case "green" => Some(Green)
     case _ => None
   }
 
@@ -130,6 +130,8 @@ object OptionExercises1 {
     *
     * Hint: Use `mkPerson` and pattern matching
     **/
-  def mkPersonThenChangeName(oldName: String, age: Int, newName: String): Option[Person] = mkPerson(oldName, age) map (changeName(newName, _))
-
+  def mkPersonThenChangeName(oldName: String, age: Int, newName: String): Option[Person] = mkPerson(oldName, age) match {
+    case None => None
+    case Some(Person(_, a)) => mkPerson(newName, a)
+  }
 }
