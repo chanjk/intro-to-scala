@@ -19,7 +19,10 @@ object OptionExercises3 {
     * scala> findJobIdByHumanIdUsingFor(2)
     * = Some(1)
     */
-  def findJobIdByHumanIdUsingFor(humanId: HumanId): Option[JobId] = ???
+  def findJobIdByHumanIdUsingFor(humanId: HumanId): Option[JobId] = for {
+    human <- findHumanById(humanId)
+    jobId <- human.optJobId
+  } yield jobId
 //    for {
 //      human <- ??? // Find a function of type HumanId => Option[Human]
 //      jobId <- ??? // Find a function of type Human => Option[JobId]
@@ -31,7 +34,10 @@ object OptionExercises3 {
     *
     * Hint: Use findJobIdByHumanIdUsingFor
     */
-  def findJobByHumanIdUsingFor(humanId: HumanId): Option[Job] = ???
+  def findJobByHumanIdUsingFor(humanId: HumanId): Option[Job] = for {
+    jobId <- findJobIdByHumanIdUsingFor(humanId)
+    job <- findJobById(jobId)
+  } yield job
 //    for {
 //      jobId <- ??? // Find a function of type HumanId => Option[JobId]
 //      job <- ???   // Find a function of type JobId => Option[Job]
