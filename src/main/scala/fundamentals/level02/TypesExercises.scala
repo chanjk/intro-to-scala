@@ -102,10 +102,10 @@ object TypesExercises {
     * Go to `TypesExercisesTest.scala` and implement the test for this scenario: "should return a default on other inputs"
     *
     **/
-  def showTrafficLightStr(trafficLight: String): String = trafficLight.split(' ') match {
-    case Array("flashing", f) =>  s"The traffic light is flashing with a frequency of $f"
-    case _ => s"The traffic light is $trafficLight"
-  }
+  def showTrafficLightStr(trafficLight: String): String = s"The traffic light is ${trafficLight match {
+    case "red" | "yellow" | "green" | "flashing" => trafficLight
+    case _ => "invalid"
+  }}"
 
   /**
     * We have a new traffic light called Flashing.
@@ -138,7 +138,7 @@ object TypesExercises {
 
     case object Green extends TrafficLight
 
-    case class Flashing(frequency: Int) extends TrafficLight
+    case object Flashing extends TrafficLight
 
   }
 
@@ -163,6 +163,7 @@ object TypesExercises {
     case Red => "red"
     case Yellow => "yellow"
     case Green => "green"
+    case Flashing => "flashing"
   }}"
 
   /**
