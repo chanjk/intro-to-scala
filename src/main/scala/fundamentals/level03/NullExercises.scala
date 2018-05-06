@@ -31,9 +31,9 @@ object NullExercises {
     **/
   def mkTrafficLightOrNull(str: String): TrafficLight = 
     str match {
-      case "red" => TrafficLight.Red
-      case "yellow" => TrafficLight.Yellow
-      case "green" => TrafficLight.Green
+      case "red" => Red
+      case "yellow" => Yellow
+      case "green" => Green
       case _ => null
     }
 
