@@ -111,12 +111,14 @@ object ExceptionExercises {
     personStringPairs.collect {
       case (name, age) =>
         try {
-          ???
+          createPerson(name, age)
         } catch {
-          case _: EmptyNameException       => ???
+          case _: EmptyNameException       => null
+          case _: InvalidAgeValueException => null
+          case _: InvalidAgeRangeException => null
           //handle in any other exception here
         }
-    }
+    }.filterNot(_ == null)
   }
 
   /**
@@ -133,8 +135,16 @@ object ExceptionExercises {
     */
   def collectErrors: List[Exception] = {
     personStringPairs.collect {
-      case (name, age) => ???
-    }
+      case (name, age) => 
+        try {
+          createPerson(name, age)
+          null
+        } catch {
+          case e: EmptyNameException => e
+          case e: InvalidAgeValueException => e
+          case e: InvalidAgeRangeException => e
+        }
+    }.filterNot(_ == null) 
   }
  // def collectErrors: List[Exception] = personStringPairs.foldRight(List[Exception]()) {
  //   case ((n, a), errs) =>
