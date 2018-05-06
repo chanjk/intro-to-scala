@@ -33,7 +33,10 @@ object LogParser {
     * - Warning
     * - Error with (severity: Int)
     */
-  trait LogLevel
+  sealed trait LogLevel
+  case object Info extends LogLevel
+  case object Warning extends LogLevel
+  case class Error(severity: Int) extends LogLevel
 
   /**
     * Now create an ADT for `LogMessage`, where `LogMessage` can be one of two possibilities:
@@ -42,7 +45,9 @@ object LogParser {
     */
   type Timestamp = Int
 
-  trait LogMessage
+  sealed trait LogMessage
+  case class KnownLog(logLevel: LogLevel, timestamp: Timestamp, message: String) extends LogMessage
+  case class UnknownLog(message: String) extends LogMessage
 
  /**
    * - Once you have defined your data types:
@@ -62,7 +67,14 @@ object LogParser {
     * scala> parseLog("X blblbaaaaa")
     * = UnknownLog("X blblbaaaaa")
     **/
-  def parseLog(str: String): LogMessage = ???
+  def parseLog(str: String): LogMessage = (str.split(",") match {
+    case Array("I", ts, msg) => toIntOpt(ts).map(KnownLog(Info, _, msg))
+    case Array("W", ts, msg) => toIntOpt(ts).map(KnownLog(Warning, _, msg))
+    case Array("E", sev, ts, msg) => for (s <- toIntOpt(sev); t <- toIntOpt(ts)) yield KnownLog(Error(s), t, msg)
+    case _ => None
+  }).getOrElse(UnknownLog(str))
+  
+  private def toIntOpt(str: String): Option[Int] = scala.util.Try(str.toInt).toOption
 
   /**
     * scala> parseLogFile("I,147,mice in the air\nX blblbaaaaa")
@@ -72,7 +84,8 @@ object LogParser {
     * Hint: Convert an Array to a List with .toList
     * What if we get an empty line from the fileContent?
     */
-  def parseLogFile(fileContent: String): List[LogMessage] = ???
+  def parseLogFile(fileContent: String): List[LogMessage] =
+    fileContent.split("\n").filter(_.trim.nonEmpty).map(parseLog).toList
 
   /**
     * Define a function that returns only logs that are unknown
@@ -80,7 +93,10 @@ object LogParser {
     * scala> getUnknowns(List(KnownLog(Info, 147, "mice in the air"), UnknownLog("blblbaaaaa")))
     * = List(UnknownLog("blblbaaaaa"))
     **/
-  def getUnknowns(logs: List[LogMessage]): List[LogMessage] = ???
+  def getUnknowns(logs: List[LogMessage]): List[LogMessage] = logs.filter {
+    case UnknownLog(_) => true
+    case _ => false
+  }
  
   /**
     * Write a function to convert a `LogMessage` to a readable `String`.
@@ -96,7 +112,14 @@ object LogParser {
     *
     * Hint: Pattern match and use string interpolation
     **/
-  def showLogMessage(log: LogMessage): String = ???
+  def showLogMessage(log: LogMessage): String = log match {
+    case KnownLog(l, t, m) => s"${l match {
+      case Info => "Info"
+      case Warning => "Warning"
+      case Error(s) => s"Error $s"
+    }} ($t) $m"
+    case UnknownLog(m) => s"Unknown log: $m"
+  }
 
   /**
     * Use `showLogMessage` on error logs with severity greater than the given `severity`.
@@ -106,7 +129,9 @@ object LogParser {
     *
     * Hint: Use `parseLogFile` and `showLogMessage`
     **/
-  def showErrorsOverSeverity(fileContent: String, severity: Int): List[String] = ???
+  def showErrorsOverSeverity(fileContent: String, severity: Int): List[String] = parseLogFile(fileContent).collect {
+    case l @ KnownLog(Error(s), _, _) if s > severity => showLogMessage(l)
+  }
 
   /**
     * Now head over to `Main.scala` in the same package to complete the rest of the program.
